@@ -2,14 +2,14 @@
 cmake_minimum_required(VERSION 3.22.2)
 
 # Project name
-project("avr-basic-electronics")
+project("avr-firmware")
 
 # AVR Chip Configuration
-set(F_CPU 16000000UL) # Clock frequency
-set(MCU atmega328p) # Microcontroller unit
-set(BAUD 9600) # UART baud rate
-set(PROG_TYPE arduino) # Programmer type
-set(USB_PORT /dev/ttyUSB0) # Serial port for programming
+set(F_CPU 16000000UL)      # Clock frequency
+set(MCU atmega328p)        # Microcontroller unit
+set(BAUD 9600)             # UART baud rate
+set(PROG_TYPE arduino)     # Programmer type
+set(USB_PORT /dev/tty.usbserial-110) # Serial port for programming
 
 # AVR Fuses - adjust according to your hardware requirements
 set(E_FUSE 0xfd)
@@ -29,9 +29,9 @@ set(CMAKE_EXE_LINKER_FLAGS "-mmcu=${MCU}")
 
 add_compile_options(
     -mmcu=${MCU} # specify MCU model
-    -Os # optimize size
-    -std=c++11 # C++ standard
-    -Wall # enable warnings
+    -Os          # optimize size
+    -std=c++11   # C++ standard
+    -Wall        # enable warnings
     -Wextra
     -Wundef
     -pedantic
