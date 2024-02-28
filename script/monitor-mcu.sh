@@ -1,44 +1,55 @@
 #!/bin/bash
 
 # Define the serial device and baud rate
-SERIAL_DEVICE="/dev/ttyUSB0" # Default Linux device path; adjust for macOS or provide as input
+SERIAL_DEVICE="/dev/ttyUSB0" # Default Linux device path
 BAUD_RATE=9600
 
-# Function to configure and read from the serial device
-read_serial() {
+# Configure serial device based on OS
+configure_serial_device() {
     if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        stty -F $SERIAL_DEVICE $BAUD_RATE cs8 -cstopb -parenb -ixon -ixoff -crtscts
-        cat $SERIAL_DEVICE
+        SERIAL_DEVICE="/dev/ttyUSB0"
     elif [[ "$OSTYPE" == "darwin"* ]]; then
-        # macOS specific command
-        stty -f $SERIAL_DEVICE $BAUD_RATE cs8 -cstopb -parenb -ixon -ixoff -crtscts
-        cat $SERIAL_DEVICE
+        SERIAL_DEVICE="/dev/cu.usbserial-110"
     elif [[ "$OSTYPE" == "msys"* ]] || [[ "$OSTYPE" == "win32"* ]]; then
-        # Windows or Windows Subsystem for Linux (WSL)
-        echo "Windows or WSL detected. Adjusting commands accordingly."
-        # TODO: Add Windows/WSL specific commands here...
+        echo "For Windows or WSL, manual setup is required. Please adjust the script or use a compatible tool."
+        exit 1
     else
         echo "Unknown OS. Exiting."
         exit 1
     fi
 }
 
-# Adjust SERIAL_DEVICE for macOS, as an example
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    SERIAL_DEVICE="/dev/cu.usbserial-110"
-fi
+# Configure SERIAL_DEVICE based on the operating system
+configure_serial_device
 
-# TODO: Adjust SERIAL_DEVICE for Windows or WSL here...
+# Function to configure the serial device
+configure_serial() {
+    stty_command="stty"
+    [[ "$OSTYPE" == "darwin"* ]] && stty_command="stty -f"
+    
+    # Common stty configuration for both Linux and macOS
+    $stty_command $SERIAL_DEVICE $BAUD_RATE cs8 -cstopb -parenb -ixon -ixoff -crtscts
+}
 
-# Call the function to read from the serial device
-read_serial
+# Function to read from the serial device
+read_serial() {
+    echo "Reading from $SERIAL_DEVICE (Press CTRL+C to stop)..."
+    cat $SERIAL_DEVICE
+}
 
-# TODO! Capture user input and send it to the serial device
+# Function to write to the serial device
+write_serial() {
+    echo "Type your message and press enter (CTRL+C to exit):"
+    while IFS= read -r line; do
+        echo "$line" > $SERIAL_DEVICE
+    done
+}
 
-# For testing on MAC: screen /dev/cu.usbserial-110 9600
-# Close with 'CTRL + a' then ':' then type 'quit' and press 'Enter
+# Configure the serial device before starting two-way communication
+configure_serial
 
-# Capture user input and send it to the serial device (not working properly!)
-while IFS= read -r line; do
-    echo "$line" > $SERIAL_DEVICE
-done
+# Start reading from the serial device in the background
+read_serial &
+
+# Start writing to the serial device in the foreground
+write_serial

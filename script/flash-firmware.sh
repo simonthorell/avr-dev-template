@@ -12,6 +12,16 @@ PROGRAMMER=arduino
 # Define the path to the hex file you want to flash.
 HEX_FILE=../build/avr-firmware.hex
 
+# Check if avrdude is installed
+if ! command -v avrdude &> /dev/null; then
+    echo "avrdude is not installed."
+    echo "To install avrdude, follow these instructions based on your operating system:"
+    echo "macOS: Install Homebrew (https://brew.sh), then run 'brew install avrdude'"
+    echo "Linux (Debian/Ubuntu): Run 'sudo apt-get update && sudo apt-get install avrdude'"
+    echo "Windows: Download and install from http://www.nongnu.org/avrdude/"
+    exit 1
+fi
+
 # Flash the microcontroller using avrdude.
 avrdude -p $MCU -c $PROGRAMMER -P $SERIAL_PORT -U flash:w:$HEX_FILE:i
 

@@ -4,17 +4,6 @@
 		"dockerfile": "Dockerfile"
 	},
 
-	"mounts": [
-		"source=/dev,target=/dev,type=bind"
-	],
-
-	// Uncomment and chenge below to set the usb-port to which your MCU is connected
-	// "runArgs": [
-	// 	"--privileged",
-	// 	"--env-file", "config.env",
-	// 	"--device=/dev/cu.usbserial-110:/dev/cu.usbserial-110"
-	// ],
-
 	// Configure tool-specific properties
 	"customizations": {
 		"extensions": [
