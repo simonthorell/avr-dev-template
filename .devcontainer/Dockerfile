@@ -13,6 +13,6 @@ RUN if [ "${REINSTALL_CMAKE_VERSION_FROM_SOURCE}" != "none" ]; then \
 
 # Install AVR toolchain
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -y install --no-install-recommends avr-libc avrdude binutils-avr gcc-avr gdb-avr make usbutils \
+    && apt-get -y install --no-install-recommends avr-libc avrdude binutils-avr gcc-avr gdb-avr make \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
