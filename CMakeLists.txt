@@ -4,7 +4,8 @@ cmake_minimum_required(VERSION 3.22.2)
 # Project name
 project("avr-firmware")
 
-# AVR Chip Configuration
+# AVR Chip Configuration 
+# (used for option of flashing directly on CMake build)
 set(F_CPU 16000000UL)      # Clock frequency
 set(MCU atmega328p)        # Microcontroller unit
 set(BAUD 9600)             # UART baud rate
@@ -30,7 +31,7 @@ set(CMAKE_EXE_LINKER_FLAGS "-mmcu=${MCU}")
 add_compile_options(
     -mmcu=${MCU} # specify MCU model
     -Os          # optimize size
-    -std=c++11   # C++ standard
+    -std=c++17   # C++ standard
     -Wall        # enable warnings
     -Wextra
     -Wundef
